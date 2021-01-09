@@ -1,0 +1,64 @@
+\contentsline {section}{\numberline {1}Introduction}{2}{section.1}%
+\contentsline {subsection}{\numberline {1.1}Historical Searches for Exoplanets}{2}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1.2}Exoplanet Detection Methods}{2}{subsection.1.2}%
+\contentsline {paragraph}{Methods Discussed in this Article}{2}{section*.3}%
+\contentsline {paragraph}{Radial Velocity}{2}{section*.4}%
+\contentsline {paragraph}{Transits}{2}{section*.5}%
+\contentsline {paragraph}{Figure 1.A}{3}{section*.6}%
+\contentsline {subsection}{\numberline {1.3}Other Methods}{3}{subsection.1.3}%
+\contentsline {paragraph}{Astrometry}{3}{section*.7}%
+\contentsline {paragraph}{Gravitational Microlensing}{3}{section*.8}%
+\contentsline {paragraph}{Direct Imaging}{3}{section*.9}%
+\contentsline {paragraph}{Pulsar Timing}{3}{section*.10}%
+\contentsline {paragraph}{Figure 1.B}{3}{section*.11}%
+\contentsline {section}{\numberline {2}Project Overview}{4}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Fundamental Aims}{4}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Flow Summary}{4}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}Orbital Elements}{4}{subsection.2.3}%
+\contentsline {paragraph}{Figure 2.A.I}{5}{section*.12}%
+\contentsline {paragraph}{Figure 2.A.II}{5}{section*.13}%
+\contentsline {subsection}{\numberline {2.4}Anomalies}{5}{subsection.2.4}%
+\contentsline {subsubsection}{\numberline {2.4.1}Mean Anomaly}{5}{subsubsection.2.4.1}%
+\contentsline {paragraph}{Figure 2.B}{5}{section*.14}%
+\contentsline {subsubsection}{\numberline {2.4.2}Eccentric Anomaly}{5}{subsubsection.2.4.2}%
+\contentsline {subsubsection}{\numberline {2.4.3}True Anomaly}{6}{subsubsection.2.4.3}%
+\contentsline {paragraph}{Figure 2.C}{6}{section*.15}%
+\contentsline {subsection}{\numberline {2.5}Code Showing Variation in Mean, Eccentric, True Anomaly}{6}{subsection.2.5}%
+\contentsline {subsection}{\numberline {2.6}The Light Curve}{8}{subsection.2.6}%
+\contentsline {paragraph}{Figure 2.D}{8}{section*.16}%
+\contentsline {subsubsection}{\numberline {2.6.1}Flux}{8}{subsubsection.2.6.1}%
+\contentsline {paragraph}{Figure 2.E}{8}{section*.17}%
+\contentsline {subsubsection}{\numberline {2.6.2}Limb Darkening}{9}{subsubsection.2.6.2}%
+\contentsline {subsubsection}{\numberline {2.6.3}Quadratic Limb Darkening}{9}{subsubsection.2.6.3}%
+\contentsline {subsubsection}{\numberline {2.6.4}Non-linear Limb Darkening}{9}{subsubsection.2.6.4}%
+\contentsline {subsubsection}{\numberline {2.6.5}Code Showing the Quadratic Limb Darkening Profile}{9}{subsubsection.2.6.5}%
+\contentsline {subsubsection}{\numberline {2.6.6}Full Transit Curve}{10}{subsubsection.2.6.6}%
+\contentsline {paragraph}{Figure 2.F}{10}{section*.18}%
+\contentsline {subsection}{\numberline {2.7}Radial Velocity}{10}{subsection.2.7}%
+\contentsline {subsubsection}{\numberline {2.7.1}Radial Velocity Equation}{10}{subsubsection.2.7.1}%
+\contentsline {paragraph}{Figure 2.G}{10}{section*.19}%
+\contentsline {paragraph}{Figure 2.H}{10}{section*.20}%
+\contentsline {subsection}{\numberline {2.8}An Interlude on Units}{10}{subsection.2.8}%
+\contentsline {section}{\numberline {3}The Exoplanet Model}{11}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Notes on the Code}{11}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}The Code}{11}{subsection.3.2}%
+\contentsline {section}{\numberline {4}Exoplanet Case Studies}{21}{section.4}%
+\contentsline {subsection}{\numberline {4.1}HD 17156}{21}{subsection.4.1}%
+\contentsline {paragraph}{Table 4.I}{22}{section*.21}%
+\contentsline {subsubsection}{\numberline {4.1.1}Transit}{22}{subsubsection.4.1.1}%
+\contentsline {paragraph}{Figure 4.A}{22}{section*.22}%
+\contentsline {paragraph}{Observations}{22}{section*.23}%
+\contentsline {subsubsection}{\numberline {4.1.2}Radial Velocity}{23}{subsubsection.4.1.2}%
+\contentsline {paragraph}{Figure 4.B}{23}{section*.24}%
+\contentsline {paragraph}{Observations}{23}{section*.25}%
+\contentsline {subsection}{\numberline {4.2}TrES-3}{23}{subsection.4.2}%
+\contentsline {paragraph}{Table 4.II}{23}{section*.26}%
+\contentsline {subsubsection}{\numberline {4.2.1}Transit}{24}{subsubsection.4.2.1}%
+\contentsline {paragraph}{Figure 4.C}{24}{section*.27}%
+\contentsline {paragraph}{Observations}{24}{section*.28}%
+\contentsline {subsubsection}{\numberline {4.2.2}Radial Velocity}{25}{subsubsection.4.2.2}%
+\contentsline {paragraph}{Figure 4.D}{25}{section*.29}%
+\contentsline {paragraph}{Observations}{25}{section*.30}%
+\contentsline {section}{\numberline {5}Conclusion}{25}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Limitations of the Model}{26}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Further Development}{26}{subsection.5.2}%
