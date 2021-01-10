@@ -16,12 +16,11 @@
     \usepackage{graphicx}
     % Maintain compatibility with old templates. Remove in nbconvert 6.0
     \let\Oldincludegraphics\includegraphics
-    % Ensure that by default, figures have no caption (until we provide a
-    % proper Figure object with a Caption API and a way to capture that
-    % in the conversion process - todo).
+
+
     \usepackage{caption}
-    \DeclareCaptionFormat{nocaption}{}
-    \captionsetup{format=nocaption,aboveskip=0pt,belowskip=0pt}
+    \usepackage{subcaption}
+
 
     \usepackage{float}
     \floatplacement{figure}{H} % forces figures to be placed at the correct location
@@ -366,8 +365,14 @@
       linkcolor=linkcolor,
       citecolor=citecolor,
       }
-    % Slightly bigger margins than the latex defaults
     
+    % Formatting for matplotlib graph titles. Left-aligned
+    \newcommand*{\figuretitle}[1]{
+    	{\textbf{#1}
+    	\par\vspace{-1em}}
+    }
+    
+    % Slightly bigger margins than the latex defaults
     \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
     
     \title{Exoplanet Model}
@@ -375,7 +380,7 @@
     \date{March 23, 2020}
 	
 
-\begin{document}
+ \begin{document}
 	
 	\begin{titlepage}
 		\begin{center}
@@ -455,7 +460,7 @@ when compared to the parent star, making direct imaging very difficult
 and only applicable to a small number of cases.
 
 \hypertarget{methods-discussed-in-this-article}{%
-\paragraph{Methods Discussed in this Article}\label{methods-discussed-in-this-article}}
+\paragraph{Methods Discussed in this Article:}\label{methods-discussed-in-this-article}}
 
 \hypertarget{radial-velocity}{%
 \paragraph{Radial Velocity}\label{radial-velocity}}
@@ -480,14 +485,15 @@ method. The transit method is most sensitive to large planets with a
 small orbital semi-major axis such as a \emph{Hot Jupiter}, where the
 probability of observing their transits is greater.
 
-    \hypertarget{figure-1.a}{%
-\paragraph{Figure 1.A}\label{figure-1.a}}
+\quad
+\begin{figure}[!ht]
+	\centering
+	\includegraphics[width=0.8\textwidth]{../images/methods.png}
+	\caption{The radial velocity and transit methods (Economist, 2016).} \label{Figure 1.a}
+\end{figure}
 
-The radial velocity and transit methods.
-\href{https://www.economist.com/graphic-detail/2016/08/25/how-to-find-exoplanets}{Here}
-is the full article.
 
-    \hypertarget{other-methods}{%
+\hypertarget{other-methods}{%
 \subsection{Other Methods}\label{other-methods}}
 
 \hypertarget{astrometry}{%
@@ -531,14 +537,15 @@ pulses of a neutron star; an Earth-like planet around a pulsar creates a
 detectable pulse delay of 1.2 milliseconds. As the name suggests, this
 method is limited to pulsars.
 
-    \hypertarget{figure-1.b}{%
-\paragraph{Figure 1.B}\label{figure-1.b}}
+\quad
+\begin{figure}[!ht]
+	\centering 
+	\includegraphics[width=0.9\textwidth]{../images/Detection.png}
+	\caption{A comprehensive summary of the different methods for detecting
+		exoplanets, as well as the total number of planetary systems found per
+		method as of 1 January 2018 (Perryman, 2018).} \label{Figure 1.b}
+\end{figure}
 
-A comprehensive summary of the different methods for detecting
-exoplanets, as well as the total number of planetary systems found per
-method as of 1 January 2018 (Perryman, 2018).
-
-\pagebreak
 
 \begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
 
@@ -562,22 +569,19 @@ the equation for radial velocity variations.
 \hypertarget{flow-summary}{%
 \subsection{Flow Summary}\label{flow-summary}}
 
-The algorithmic flow can be summarised as follows: 1. Select a desired
-binary star system.\\
-2. Load the orbital elements of that desired system (see 2.3) 3. Compute
-the mean anomaly from \(M = \frac{2\pi}{P}(t-T)\), where \(P\) is the
-orbital period of the planet and \(T\) is the time of last passage at
-periaston. 4. Use Newton's method to solve Kepler's equation
-\(M =E - e\sin(E)\), deriving \(E\), the eccentric anomaly. 5. From
-\(E\) derive \(d\), the side on centre-to-centre distance between the
-planet and star. 6. Calculate \(\nu\), the true anomaly. 7. From \(d\),
-integrate the unobstructed flux emitted from the parent star. 8.
-Integrate to solve for the total flux emitted, using the light intensity
-equation described by quadratic limb darkening (Mandel and Agol). 9.
-Derive \(V\), the observed radial velocity variations, from \(\nu\). 10.
-Repeat steps 2-9 for each timestamp of the period of the orbit,
-producing two arrays of results that can be plotted against the
-timestamp.
+The algorithmic flow can be summarised as follows: 
+\begin{enumerate}
+	\item Select a desired binary star system.
+	\item Load the orbital elements of that desired system (see \ref{orbital-elements}) 
+	\item Compute the mean anomaly from \(M = \frac{2\pi}{P}(t-T)\), where \(P\) is the orbital period of the planet and \(T\) is the time of last passage at periaston.
+	\item Use Newton's method to solve Kepler's equation \(M =E - e\sin(E)\), deriving \(E\), the eccentric anomaly. 
+	\item From \(E\) derive \(d\), the side on centre-to-centre distance between the planet and star. 
+	\item Calculate \(\nu\), the true anomaly. 
+	\item From \(d\), integrate the unobstructed flux emitted from the parent star. 
+	\item Integrate to solve for the total flux emitted, using the light intensity equation described by quadratic limb darkening (Mandel and Agol, 2002). 
+	\item Derive \(V\), the observed radial velocity variations, from \(\nu\). 
+	\item Repeat steps 2-9 for each timestamp of the period of the orbit, producing two arrays of results that can be plotted against the	timestamp.
+\end{enumerate}
 
     \hypertarget{orbital-elements}{%
 \subsection{Orbital Elements}\label{orbital-elements}}
@@ -607,22 +611,28 @@ longitude of the ascending node, \(\Omega\), is not included in our
 model as it is difficult to measure and does not affect the final
 results.
 
-    \hypertarget{figure-2.a.i}{%
-\paragraph{Figure 2.A.I}\label{figure-2.a.i}}
+\quad
 
-Diagram showing orbital elements.
+\begin{figure}[!ht]
+	\centering 
+	\includegraphics[width=0.75\textwidth]{../images/orbit_elements.png}
+	\caption{Diagram showing orbital elements (Wikipedia, 2020a).} \label{Figure 2.a.i}
+\end{figure}
 
-    \hypertarget{figure-2.a.ii}{%
-\paragraph{Figure 2.A.II}\label{figure-2.a.ii}}
+\smallskip
 
-(Wikipedia, 2020a)
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.4\textwidth]{../images/Angular_Parameters_of_Elliptical_Orbit.png}
+	\caption{Angular parameters (Wikipedia, 2020a).} \label{Figure 2.a.ii}
+\end{figure}
 
     \hypertarget{anomalies}{%
 \subsection{Anomalies}\label{anomalies}}
 
-In astronomy, \emph{anomaly} refers to three different angles are used
+In astronomy, \emph{anomaly} refers to three different angles which are used
 to map the motion of the planet as it orbits a star; these are
-fundamentally linked with each other with a series of equations (Reed,
+fundamentally linked with each other through a series of equations (Reed,
 2019). An excellent source on the derivation of these is found
 \href{http://www.bogan.ca/orbits/kepler/e_anomly.html}{here.}
 
@@ -638,25 +648,21 @@ M = \frac{2\pi}{P}(t-T)
 \(T\) is the time of last passage at periaston (where the planet comes
 closest to the star).
 
-This is illustrated here:
+This is illustrated below as Figure \ref{Figure 2.b}:
 
-    \hypertarget{figure-2.b}{%
-\paragraph{Figure 2.B}\label{figure-2.b}}
-
-``Area swept out per unit time is in grey by an object in an elliptical
-orbit, and an imaginary object in a circular orbit is in pink.''
-
-Note that for visual simplicity, a non-overlapping circular orbit is
-drawn: this circular orbit with same orbital period is not shown in true
-scale with this elliptical orbit. For the scale to be true for orbits of
-equal period, the radius of circle must equal the semi-major axis of the
-ellipse. (Wikipedia, 2020b)
+\begin{figure}[!ht]
+	\centering
+	\includegraphics[width=0.4\textwidth]{../images/Mean_anomaly_diagram.png}
+	\caption{``Area swept out per unit time is in grey by an object in an elliptical orbit, and an imaginary object in a circular orbit is in pink.'' Note that for visual simplicity, a non-overlapping circular orbit is drawn: this circular orbit with same orbital period is not shown in true scale with this elliptical orbit. For the scale to be true for orbits of equal period, the radius of circle must equal the semi-major axis of the ellipse. (Wikipedia, 2020b)} 
+	
+	\label{Figure 2.b}
+\end{figure}
 
     \hypertarget{eccentric-anomaly}{%
 \subsubsection{Eccentric Anomaly}\label{eccentric-anomaly}}
 
 This is the angle \(E\), between the periapsis, the centre of the
-ellipse, and the point $P'$ (shown in Figure 2.C), which is located by
+ellipse, and the point $P'$ (shown in Figure \ref{Figure 2.c}), which is located by
 drawing a perpendicular to \(CF\) passing through the planet and
 intersecting a circle of \(C-\)periapsis.
 
@@ -668,8 +674,7 @@ M = E - e\sin{E}
 \end{equation*}
 
 This equation is known as a transcendental function as it cannot be
-solved analytically; rather, it is solved numerically, using Newton's
-computation method, which consists of finding a better value at each
+solved analytically; rather, it is solved numerically, using Newton's method, which consists of finding a better value at each
 iteration using the value previously found at the previous iteration,
 the expression of the function, and its derivative:
 \(x_{n+1} = x_{n}-\frac{f(x_{n})}{f'(x_{n})}\). These two functions are
@@ -680,33 +685,36 @@ E(M)  & = E - e\sin{E} - M \\
 E'(M) & = 1 - e\cos{E}
 \end{align}
 
+\vfill
+
 \hypertarget{true-anomaly}{%
 \subsubsection{True Anomaly}\label{true-anomaly}}
 
-This is the angle \(f\) in Figure 2.C, but is more commonly denoted as
+This is the angle \(f\) in Figure \ref{Figure 2.c}, but is more commonly denoted as
 \(\theta\) or \(\nu\). In this study we use \(\nu\).
 
-The true anomaly can be derived from the eccentric anomaly through the
-following equation.
+The true anomaly can be derived from the eccentric anomaly through the following equation:
 
 \begin{equation*}
 \cos{\nu} = \frac{ \cos{E} - e }{ 1 - e\cos{E} } 
 \end{equation*}
 
-    \hypertarget{figure-2.c}{%
-\paragraph{Figure 2.C}\label{figure-2.c}}
 
-(Wikipedia, 2020c)
+\begin{figure}[!ht]
+	\centering
+	\includegraphics[width=0.4\textwidth]{../images/Eccentric_and_True_Anomaly.png}
+	\caption{(Wikipedia, 2020c).} \label{Figure 2.c}
+\end{figure}
+
 
     \hypertarget{code-showing-variation-in-mean-eccentric-true-anomaly}{%
 \subsection{Code Showing Variation in Mean, Eccentric, True Anomaly}\label{code-showing-variation-in-mean-eccentric-true-anomaly}}
 
-Note that the full annotated code can be found in section 3.
+Note that the full annotated code can be found in section \ref{the-code}.
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{1}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-\PY{o}{\PYZpc{}}\PY{k}{matplotlib} notebook
 \PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
 \PY{k+kn}{import} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot} \PY{k}{as} \PY{n+nn}{plt}
 \PY{k+kn}{from} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot} \PY{k+kn}{import} \PY{n}{figure}
@@ -754,7 +762,6 @@ Note that the full annotated code can be found in section 3.
         \PY{n}{diff} \PY{o}{=} \PY{n}{cosE} \PY{o}{\PYZhy{}} \PY{n}{e}
         \PY{n}{cosNu} \PY{o}{=} \PY{n}{diff}\PY{o}{/}\PY{p}{(}\PY{l+m+mi}{1} \PY{o}{\PYZhy{}} \PY{n}{e} \PY{o}{*} \PY{n}{cosE}\PY{p}{)}
         \PY{n}{nu} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{arccos}\PY{p}{(}\PY{n}{cosNu}\PY{p}{)}
-
         \PY{k}{return} \PY{n}{nu}
            
 \PY{k}{def} \PY{n+nf}{main}\PY{p}{(}\PY{p}{)}\PY{p}{:}
@@ -777,11 +784,9 @@ Note that the full annotated code can be found in section 3.
         \PY{n}{nu} \PY{o}{=} \PY{n}{get\PYZus{}true\PYZus{}anomaly}\PY{p}{(}\PY{n}{sample\PYZus{}parameters}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{e}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,} \PY{n}{E}\PY{p}{)}
         \PY{k}{if} \PY{n}{E} \PY{o}{\PYZgt{}}\PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{pi}\PY{p}{:}
             \PY{n}{nu} \PY{o}{=} \PY{p}{(}\PY{l+m+mi}{2}\PY{o}{*}\PY{n}{np}\PY{o}{.}\PY{n}{pi}\PY{p}{)} \PY{o}{\PYZhy{}}\PY{n}{nu}
-        
         \PY{n}{M\PYZus{}list}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{M}\PY{p}{)}\PY{p}{;} \PY{n}{E\PYZus{}list}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{E}\PY{p}{)}\PY{p}{;} \PY{n}{nu\PYZus{}list}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{nu}\PY{p}{)}
         
     \PY{n}{figure}\PY{p}{(}\PY{n}{num}\PY{o}{=}\PY{l+m+mi}{3}\PY{p}{,} \PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{,} \PY{l+m+mi}{8}\PY{p}{)}\PY{p}{,} \PY{n}{dpi}\PY{o}{=}\PY{l+m+mi}{80}\PY{p}{,} \PY{n}{facecolor}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{w}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{edgecolor}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{b}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-    
     
     \PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{timestamps}\PY{p}{,} \PY{n}{M\PYZus{}list}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{r\PYZhy{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{label}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Mean Anomaly}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
     \PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{timestamps}\PY{p}{,} \PY{n}{E\PYZus{}list}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{b\PYZhy{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{label}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Eccentric Anomaly}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
@@ -801,17 +806,12 @@ Note that the full annotated code can be found in section 3.
 \end{Verbatim}
 \end{tcolorbox}
 
+\begin{figure}[hbt!]
+	\figuretitle{Output:}
+	\centering	
+   	\includegraphics[width=0.8\textwidth]{../matplotlib_graphs/anomalies.png}
+\end{figure}
     
-    \begin{Verbatim}[commandchars=\\\{\}]
-<IPython.core.display.Javascript object>
-    \end{Verbatim}
-
-    
-    
-    \begin{Verbatim}[commandchars=\\\{\}]
-<IPython.core.display.HTML object>
-    \end{Verbatim}
-
     
     \hypertarget{the-light-curve}{%
 \subsection{The Light Curve}\label{the-light-curve}}
@@ -822,7 +822,7 @@ parameters, the most important of these being the formulae giving a
 coefficients'' (Mandel and Agol, 2002). In order to produce the
 normalised light curve, we need to calculate the ratio between the
 unobstructed and obstructed blocked flux. The parameters of the transit
-curve are given the diagram below.
+curve are given in the diagram below.
 
 The \emph{total} duration of the transit is
 \(T_{tot} = t_{IV} - t_{I}\); the \emph{full} duration is
@@ -830,11 +830,14 @@ The \emph{total} duration of the transit is
 \(\tau_{ing} = t_{II} - t_{I}\); the \emph{egress} duration is
 \(\tau_{egr} = t_{IV} - t_{III}\). (Winn, 2010)
 
-    \hypertarget{figure-2.d}{%
-\paragraph{Figure 2.D}\label{figure-2.d}}
 
-Figure showing the main parameters concerning the transit of the planet,
-and its associated light curve. (Winn, 2010)
+\begin{figure}[!ht]
+	\centering
+	\includegraphics[width=0.4\textwidth]{../images/transit_flux.png}
+	\caption{Figure showing the main parameters of the transit of the planet (Winn, 2010).} \label{Figure 2.d}
+\end{figure}
+
+
 
     \hypertarget{flux}{%
 \subsubsection{Flux}\label{flux}}
@@ -848,20 +851,20 @@ eccentric anomaly, \(E\). This relationship is described as follows:
 d = a\cos{E}
 \end{equation*}
 
-Figure 2.E gives the function for a uniform light source.
+The below gives the function for a uniform light source:
 
-    \hypertarget{figure-2.e}{%
-\paragraph{Figure 2.E}\label{figure-2.e}}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{../images/uniform_source.png}
+	\label{Figure 2.e}
+\end{figure}
 
     \hypertarget{limb-darkening}{%
 \subsubsection{Limb Darkening}\label{limb-darkening}}
 
-This a mathematical model that accounts for the fact that stars are
-significantly dimmer at the edges; using limb darkening equations, we
-can integrate this function for the entire surface of the star.
+This is a mathematical model that accounts for the fact that stars are significantly dimmer at the edges; using limb darkening equations, we can integrate this function for the entire surface of the star.
 
-The intensity of the stellar output has been described by the analytic
-equations given by Mandel and Agol (2002).
+The intensity of the stellar output has been described by Mandel and Agol (2002).
 
 \hypertarget{quadratic-limb-darkening}{%
 \subsubsection{Quadratic Limb Darkening}\label{quadratic-limb-darkening}}
@@ -891,7 +894,6 @@ I(\mu) = 1 - \sum_{n = 1}^{4} c_{n}(1 - \mu^{\frac{n}{2}})
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{2}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-\PY{o}{\PYZpc{}}\PY{k}{matplotlib} notebook
 \PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
 \PY{k+kn}{import} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot} \PY{k}{as} \PY{n+nn}{plt}
 \PY{k+kn}{from} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot} \PY{k+kn}{import} \PY{n}{figure}
@@ -903,7 +905,6 @@ I(\mu) = 1 - \sum_{n = 1}^{4} c_{n}(1 - \mu^{\frac{n}{2}})
     \PY{n}{k} \PY{o}{=} \PY{l+m+mi}{1} \PY{o}{\PYZhy{}} \PY{n}{mu}
     \PY{k}{return} \PY{l+m+mi}{1} \PY{o}{\PYZhy{}} \PY{n}{gamma}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{*}\PY{n}{k} \PY{o}{\PYZhy{}} \PY{n}{gamma}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{*}\PY{p}{(}\PY{n}{k}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2}\PY{p}{)}
 
-
 \PY{n}{figure}\PY{p}{(}\PY{n}{num}\PY{o}{=}\PY{l+m+mi}{3}\PY{p}{,} \PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{6}\PY{p}{,} \PY{l+m+mi}{4}\PY{p}{)}\PY{p}{,} \PY{n}{dpi}\PY{o}{=}\PY{l+m+mi}{80}\PY{p}{,} \PY{n}{facecolor}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{w}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{edgecolor}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{b}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
 
 \PY{n}{x} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{linspace}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{3600}\PY{p}{)}
@@ -911,49 +912,38 @@ I(\mu) = 1 - \sum_{n = 1}^{4} c_{n}(1 - \mu^{\frac{n}{2}})
 
 \PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{x}\PY{p}{,}\PY{n}{y}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{b}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
 \PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Quadratic Limb Darkening Curve}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-    
 \PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Normalised Distance from Centre of Star}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
 \PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Normalised Flux}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
 \PY{n}{plt}\PY{o}{.}\PY{n}{grid}\PY{p}{(}\PY{k+kc}{True}\PY{p}{)}
-
 \PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
 \end{Verbatim}
 \end{tcolorbox}
 
+\begin{figure}[H]
+	\figuretitle{Output:}
+	\centering
+	\includegraphics[width=0.75\textwidth]{../matplotlib_graphs/limb_darkening.png}
+\end{figure}    
     
-    \begin{Verbatim}[commandchars=\\\{\}]
-<IPython.core.display.Javascript object>
-    \end{Verbatim}
-
-    
-    
-    \begin{Verbatim}[commandchars=\\\{\}]
-<IPython.core.display.HTML object>
-    \end{Verbatim}
-
-    
-    This seems reasonable. See the fully annotated code in Section 3.
+This seems reasonable. See the fully annotated code in Section 3.
 
     \hypertarget{full-transit-curve}{%
 \subsubsection{Full Transit Curve}\label{full-transit-curve}}
 
-These equations are combined with Figure 2.F to give the full transit
+These equations are combined with the below to give the full transit
 curve:
 
-    \hypertarget{figure-2.f}{%
-\paragraph{Figure 2.F}\label{figure-2.f}}
+\begin{figure}[!ht]
+	\centering
+	\includegraphics[width=0.5\textwidth]{../images/flux_eq.png}
+	\label{Figure 2.f}
+\end{figure}
 
     \hypertarget{radial-velocity}{%
 \subsection{Radial Velocity}\label{radial-velocity}}
 
 Predicting the radial velocity also requires an accurate model of the
-motion of both the exoplanet and the parent star; once both the mass of
-the planet and star are given, and the motion of the planet can be
-modelled, the motion of the star can be found. The formulae used in this
-project relating true anomaly, \(\nu\), and variations in radial
-velocity are derived
-\href{http://exoplanets.astro.yale.edu/workshop/EPRV/Bibliography_files/Radial_Velocity.pdf}{here}
-in \emph{Radial Velocity} (Lovis, 2011).
+motion of both the exoplanet and parent star; once the mass of both are given, and the motion of the planet can be modelled, the motion of the star can be found. The formulae used in this project relating true anomaly, \(\nu\), and variations in radial velocity are derived \href{http://exoplanets.astro.yale.edu/workshop/EPRV/Bibliography_files/Radial_Velocity.pdf}{here} in \emph{Radial Velocity} (Lovis, 2011).
 
 Whilst the model includes the calculation of the change in wavelength
 due to the Doppler effect, below in section 4 we will focus on the
@@ -969,25 +959,35 @@ negligible given the range of uncertainty in the initial readings.
 The equation for radial velocity used in this model is given by Lovis
 and Fischer (2010).
 
-    \hypertarget{figure-2.g}{%
-\paragraph{Figure 2.G}\label{figure-2.g}}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.5\textwidth]{../images/radial_velocity.png}
+	\label{Figure 2.g}
+\end{figure}
 
-    From there we can derive the semi-amplitude of the radial velocity:
-\(K\).
+From there we can derive the semi-amplitude of the radial velocity: \(K\).
 
-    \hypertarget{figure-2.h}{%
-\paragraph{Figure 2.H}\label{figure-2.h}}
+\begin{figure}[H]
+   	\centering
+   	\includegraphics[width=0.5\textwidth]{../images/K_star.png}
+   	\label{Figure 2.h}
+\end{figure}
 
     \hypertarget{an-interlude-on-units}{%
 \subsection{An Interlude on Units}\label{an-interlude-on-units}}
 
-In this model, the following units are used: - Length: Astronomical
-Units (AU) - Mass: Solar Mass - Time: Days - Angle: Radians
+In this model, the following units are used: 
+
+\begin{itemize}
+	\item Length: Astronomical Units (AU)
+	\item Mass: Solar Mass
+	\item Time: Days
+	\item Angle: Radians
+\end{itemize}
 
 Hence, whilst some values such as \(i\) (inclination) are inputted into
-the code in other units (e.g.~degrees), these are converted in the code.\\
+the code in other units (e.g. degrees), these are converted in the code.
 
-\pagebreak
 \begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
     \hypertarget{the-exoplanet-model}{%
 \section{The Exoplanet Model}\label{the-exoplanet-model}}
@@ -1491,8 +1491,8 @@ individually as they are not stand-alone functions.
 
 \begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
 
-    \hypertarget{data-analysis}{%
-\section{Exoplanet Case Studies}\label{data-analysis}}
+    \hypertarget{using-the-model}{%
+\section{Using the Model}\label{using-the-model}}
 
 
 Having used the code to produce the simulated light curves and radial
@@ -1507,12 +1507,16 @@ Trans-Atlantic Exoplanet Survey at the Palomar and Lowell Observatories
 Visible with good binoculars, HD 17156 is a yellow subgiant star in the
 constellation of Cassiopeia approximately 255 light-years away;
 discovered in 2007 by Fisher et al., HD 17156b is a relatively cool Hot
-Jupiter planet slightly smaller than Jupiter. Below is a table of all
-the initial parameters for the planetary system of HD 17156 (Nutzman et
+Jupiter planet slightly smaller than Jupiter. The next page shows a figure containing all the initial parameters for the HD 17156 system (Nutzman et
 al., 2010).
 
-    \hypertarget{table-4.i}{%
-\paragraph{Table 4.I}\label{table-4.i}}
+\begin{figure}[!hbt]
+	\centering
+	\includegraphics[width=0.6\textwidth]{../images/HD_17156.png}
+	\label{Tab_1}
+\end{figure}
+
+\subsubsection*{Input Parameters}
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{6}{\boxspacing}
@@ -1532,30 +1536,25 @@ al., 2010).
                    \PY{n}{w}\PY{o}{=}\PY{l+m+mf}{121.71}\PY{p}{,}
                    \PY{n}{incl}\PY{o}{=}\PY{l+m+mf}{86.49}\PY{p}{)}
 
-
 \PY{n}{HD\PYZus{}17156\PYZus{}system} \PY{o}{=} \PY{n}{BinarySystem}\PY{p}{(}\PY{n}{HD\PYZus{}17156}\PY{p}{,} \PY{n}{HD\PYZus{}17156b}\PY{p}{)}
 \end{Verbatim}
 \end{tcolorbox}
 
     \hypertarget{transit}{%
-\subsubsection{Transit}\label{transit}}
+\subsubsection{Transit}\label{transit_1}}
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{7}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
 \PY{c+c1}{\PYZsh{} Plotting Dependencies }
-\PY{o}{\PYZpc{}}\PY{k}{matplotlib} notebook
 \PY{k+kn}{import} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot} \PY{k}{as} \PY{n+nn}{plt}
 \PY{n}{data} \PY{o}{=} \PY{n}{HD\PYZus{}17156\PYZus{}system}\PY{o}{.}\PY{n}{transit}\PY{p}{(}\PY{p}{)}
-
 \PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{,} \PY{l+m+mi}{8}\PY{p}{)}\PY{p}{)}
 \PY{n}{plt}\PY{o}{.}\PY{n}{scatter}\PY{p}{(}\PY{n}{data}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{timestamps}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,} \PY{n}{data}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{light\PYZus{}curve}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,} \PY{n}{marker}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{.}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
 
 \PY{n}{line} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{data}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{timestamps}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,} \PY{n}{data}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{light\PYZus{}curve}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}
 \PY{n}{plt}\PY{o}{.}\PY{n}{setp}\PY{p}{(}\PY{n}{line}\PY{p}{,} \PY{n}{linewidth}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{linestyle}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZhy{}\PYZhy{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-
 \PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Transit Light Curve for HD 17156}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-    
 \PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Period/days}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
 \PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Normalised Flux}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
 \PY{n}{plt}\PY{o}{.}\PY{n}{grid}\PY{p}{(}\PY{k+kc}{True}\PY{p}{)}
@@ -1563,48 +1562,34 @@ al., 2010).
 \end{Verbatim}
 \end{tcolorbox}
 
-    
-    \begin{Verbatim}[commandchars=\\\{\}]
-<IPython.core.display.Javascript object>
-    \end{Verbatim}
-
-    
-    
-    \begin{Verbatim}[commandchars=\\\{\}]
-<IPython.core.display.HTML object>
-    \end{Verbatim}
+\begin{figure}[!hbt]
+	\figuretitle{Output:}
+	\centering
+	\includegraphics[width=0.75\textwidth]{../matplotlib_graphs/transit_1.png}
+\end{figure}    
 
 
-    \hypertarget{figure-4.a}{%
-\paragraph{Figure 4.A}\label{figure-4.a}}
-
-Figure showing the light curve of HD 17156 measured by Nutzman et
-al.~(2010)
+\begin{figure}[!h]
+	\centering 
+	\includegraphics[width=0.41\textwidth]{../images/light_curve.png}
+	\caption{Figure showing the light curve of HD 17156 measured by Nutzman et al. (2010).} 
+	\label{Figure 4.a}
+\end{figure}
 
     \hypertarget{observations}{%
-\paragraph{Observations}\label{observations}}
+\paragraph{Observations}\label{observations_1}}
 
 When compared to the light curve measured by Nutzmann et al., we note
-that the light curve we produce is very similar: it can be observed that
-the total, full and ingress/egress duration of the transit (see 2.5) is
-almost identical- around 3 hours for the full transit time- when we
-convert period from days to hours. The depth of the transit curve,
-\(\delta\), is also concurrent with the measured results, just under
-0.994.
+that the light curve we produce is very similar: it can be observed that the total, full and ingress/egress duration of the transit (see \ref{the-light-curve}) is almost identical- around 3 hours for the full transit time- when we convert period from days to hours. The depth of the transit curve, \(\delta\), is also concurrent with the measured results, just under 0.994.
 
-We note that the secondary transit, or the occulatory transit (when the
-planet dips behind the star, causing less starlight to be reflected), is
-too large: this suggests that there is a simplification or mistake in
-our function for the flux of a uniform stellar source.
 
     \hypertarget{radial-velocity}{%
-\subsubsection{Radial Velocity}\label{radial-velocity}}
+\subsubsection{Radial Velocity}\label{radial-velocity_1}}
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{8}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
 \PY{c+c1}{\PYZsh{} Plotting Dependencies }
-\PY{o}{\PYZpc{}}\PY{k}{matplotlib} notebook
 \PY{k+kn}{import} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot} \PY{k}{as} \PY{n+nn}{plt}
 
 \PY{n}{data} \PY{o}{=} \PY{n}{HD\PYZus{}17156\PYZus{}system}\PY{o}{.}\PY{n}{radial\PYZus{}velocity}\PY{p}{(}\PY{p}{)}
@@ -1616,7 +1601,6 @@ our function for the flux of a uniform stellar source.
 \PY{n}{plt}\PY{o}{.}\PY{n}{setp}\PY{p}{(}\PY{n}{line}\PY{p}{,} \PY{n}{linewidth}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{linestyle}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZhy{}\PYZhy{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
 
 \PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Radial Velocity for HD 17156}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-    
 \PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Period/days}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
 \PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Velocity/AU*day\PYZca{}\PYZhy{}1}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
 \PY{n}{plt}\PY{o}{.}\PY{n}{grid}\PY{p}{(}\PY{k+kc}{True}\PY{p}{)}
@@ -1624,33 +1608,26 @@ our function for the flux of a uniform stellar source.
 \end{Verbatim}
 \end{tcolorbox}
 
-    
-    \begin{Verbatim}[commandchars=\\\{\}]
-<IPython.core.display.Javascript object>
-    \end{Verbatim}
-
-    
-    
-    \begin{Verbatim}[commandchars=\\\{\}]
-<IPython.core.display.HTML object>
-    \end{Verbatim}
-
-    
+\begin{figure}[H]
+	\figuretitle{Output:}
+	\centering
+	\includegraphics[width=0.75\textwidth]{../matplotlib_graphs/radial_velocity_1.png}
+\end{figure} 
     
 
-    \hypertarget{figure-4.b}{%
-\paragraph{Figure 4.B}\label{figure-4.b}}
+\begin{figure}[!hbt]
+	\centering 
+	\includegraphics[width=\textwidth]{../images/radial_v_graph.png}
+	\caption{{\it Left}: Radial velocities for HD 17156 from the Keck Observatory ({\it diamonds}) and Subaru Observatory ({\it filled circles}) accounting for uncertainties caused by photospheric jitter. {\it Right}: Keck velocities only. Although the phase coverage misses periastron, the Keck velocities alone confirm high eccentricity in HD 17156b. Fisher et al. (2007).} 
+	\label{Figure 4.b}
+\end{figure}
 
-Figure showing the radial velocity variations of HD 17156 measured by
-Fisher et al.~(2007)
+
 
     \hypertarget{observations}{%
-\paragraph{Observations}\label{observations}}
+\paragraph{Observations}\label{observations_2}}
 
-We note that our radial velocity variations are 0.6 of the orbital phase
-out with Fisher's results; otherwise the results on the graph seem to be
-of similar proportion and shape. Once converted, the semi-amplitude of
-our graph, \(K\), is concurrent with the results above.
+We note that our radial velocity variations are 0.6 of the orbital phase out with Fisher's results; otherwise the results on the graph seem to be of similar proportion and shape. Once converted, the semi-amplitude of our graph, \(K\), is concurrent with the results above.
 
 
 \hypertarget{tres-3}{%
@@ -1659,11 +1636,18 @@ our graph, \(K\), is concurrent with the results above.
 Orbiting the star GSC 03089-00929, 760 light-years away in the
 constellation of Hercules, TrES-3b is an extrasolar planet that has an
 orbital period of just 31 hours and has nearly twice the mass of
-Jupiter. Below is a table of all the initial parameters for TrES-3
-measured by Sozzetti et al.~(2009).
+Jupiter. Below is a figure containing all the initial parameters for TrES-3 as measured by Sozzetti et al. (2009).
 
-    \hypertarget{table-4.ii}{%
-\paragraph{Table 4.II}\label{table-4.ii}}
+\begin{figure}
+	\centering
+	\includegraphics[width=1\linewidth]{../images/TrES-3_combined.png}
+	\label{Tab 2}
+\end{figure}
+
+\medskip
+
+\subsubsection*{Input Parameters}
+
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{9}{\boxspacing}
@@ -1690,13 +1674,12 @@ measured by Sozzetti et al.~(2009).
 \end{tcolorbox}
 
     \hypertarget{transit}{%
-\subsubsection{Transit}\label{transit}}
+\subsubsection{Transit}\label{transit_2}}
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{10}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
 \PY{c+c1}{\PYZsh{} Plotting Dependencies }
-\PY{o}{\PYZpc{}}\PY{k}{matplotlib} notebook
 \PY{k+kn}{import} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot} \PY{k}{as} \PY{n+nn}{plt}
 
 \PY{n}{data} \PY{o}{=} \PY{n}{TrES\PYZus{}3\PYZus{}system}\PY{o}{.}\PY{n}{transit}\PY{p}{(}\PY{p}{)}
@@ -1717,46 +1700,39 @@ measured by Sozzetti et al.~(2009).
 \end{tcolorbox}
 
     
-    \begin{Verbatim}[commandchars=\\\{\}]
-<IPython.core.display.Javascript object>
-    \end{Verbatim}
+\begin{figure}[!hbt]
+	\figuretitle{Output:}
+	\centering
+	\includegraphics[width=0.75\textwidth]{../matplotlib_graphs/transit_2.png}
+\end{figure} 
 
-    
-    
-    \begin{Verbatim}[commandchars=\\\{\}]
-<IPython.core.display.HTML object>
-    \end{Verbatim}
 
-    
-    
+\begin{figure}[!hbt]
+	\centering
+	\includegraphics[width=0.75\textwidth]{../images/TrE-S_light_curve.png}
+	\caption{The transit light curve as measured by Christiansen et al. (2007). {\it Upper panel}: The seven TrES-3 transits, phase-folded and binned in two-minute intervals. The solid line is the best-fit transit model. {\it Lower panel}: the residuals when the best-fit model is subtracted from the data.} 
+	\label{Figure 4.c}
+\end{figure}
 
-    \hypertarget{figure-4.c}{%
-\paragraph{Figure 4.C}\label{figure-4.c}}
 
-The transit light curve as measured by Christiansen et al.~(2007).
 
     \hypertarget{observations}{%
-\paragraph{Observations}\label{observations}}
+\paragraph{Observations}\label{observations_3}}
 
 As regards to the total, full and ingress/egress duration of the transit
 (see 2.5), we note that our model produces results that are fairly
 accurate. \(\delta\), however, seems to be slightly too large in our
 calculations- around 0.968 as opposed to 0.976 as measured by
-Christiansen et al.- which suggests that the input data has fairly large
-degrees of uncertainty.
+Christiansen et al.- which suggests that the input data has fairly large degrees of uncertainty.
 
-Again, we note that the secondary transit is too large: this suggests
-that there is a simplification or mistake in our function for the flux
-of a uniform stellar source.
 
     \hypertarget{radial-velocity}{%
-\subsubsection{Radial Velocity}\label{radial-velocity}}
+\subsubsection{Radial Velocity}\label{radial-velocity_2}}
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{11}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
 \PY{c+c1}{\PYZsh{} Plotting Dependencies }
-\PY{o}{\PYZpc{}}\PY{k}{matplotlib} notebook
 \PY{k+kn}{import} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot} \PY{k}{as} \PY{n+nn}{plt}
 
 \PY{n}{data} \PY{o}{=} \PY{n}{TrES\PYZus{}3\PYZus{}system}\PY{o}{.}\PY{n}{radial\PYZus{}velocity}\PY{p}{(}\PY{p}{)}
@@ -1777,27 +1753,23 @@ of a uniform stellar source.
 \end{Verbatim}
 \end{tcolorbox}
 
-    
-    \begin{Verbatim}[commandchars=\\\{\}]
-<IPython.core.display.Javascript object>
-    \end{Verbatim}
+
+\begin{figure}[!hbt]
+	\figuretitle{Output:}
+	\centering
+	\includegraphics[width=0.75\textwidth]{../matplotlib_graphs/radial_velocity_2.png}
+\end{figure} 
 
     
-    
-    \begin{Verbatim}[commandchars=\\\{\}]
-<IPython.core.display.HTML object>
-    \end{Verbatim}
+\begin{figure}[!hbt]
+	\centering
+	\includegraphics[width=0.7\textwidth]{../images/TrE-S_radial_velocity.png}
+	\caption{{\it Top}: Radial velocity observations of TrES-3 obtained with Keck/HIRES using a $I_{2}$ cell, shown relative to the centre of mass. The best-fit model ({\it solid line}) is overplotted. {\it Middle}: Residuals from the best-fit model to the radial velocities. {\it Bottom}: Bisector spans shifted to a median of zero, for each of the iodine exposures as well as for the template (which is shown as the additional data point at phase 0.937). O'Donovan et al. (2007).} \label{Figure 4.d}
+\end{figure}    
 
-    
-    
-
-    \hypertarget{figure-4.d}{%
-\paragraph{Figure 4.D}\label{figure-4.d}}
-
-Variations in radial velocity as measured by O'Donovan et al.~(2007).
 
     \hypertarget{observations}{%
-\paragraph{Observations}\label{observations}}
+\paragraph{Observations}\label{observations_4}}
 
 A smooth curve: the shape and size of our results seem to be accurate.
 We note that our radial velocity variations are 0.2 of the orbital phase
@@ -1812,14 +1784,10 @@ or a logical error with the model.\\
 
 
 As a Keplerian model of a binary exoplanet system, this model achieves
-the aims listed in section 2.1: we have created a program that models an
-exoplanet system to produce predictions for observations from Earth,
-which can be applied to any known binary exoplanet system. These
-predictions have been compared with actual data, producing realistic
-quantitative results that can be tested against real astronomical data.
+the aims listed in \ref{fundamental-aims}: we have created a program that models an exoplanet system to produce predictions for observations from Earth, which can be applied to any known binary exoplanet system. These predictions have been compared with actual data, producing realistic quantitative results that can be tested against real astronomical data.
 
-\hypertarget{limitations-of-the-model}{%
-\subsection{Limitations of the Model}\label{limitations-of-the-model}}
+\hypertarget{limitations}{%
+\subsection{Limitations}\label{limitations}}
 
 Certain numerical calculations mean that the model has a limited
 accuracy when predicting the light curve, accounting for some of the
@@ -1840,8 +1808,8 @@ or vice versa. This will be a key area of development for the future,
 especially since this effect appears to be commonplace amongst Hot
 Jupiters.
 
-\hypertarget{further-development}{%
-\subsection{Further Development}\label{further-development}}
+\hypertarget{future-development}{%
+\subsection{Future Development}\label{future-development}}
 
 With the promise of larger telescopes in the near future, larger
 collecting areas will produce more focused and accurate readings,
@@ -1858,76 +1826,49 @@ correcting the anomalies described above. The final stage would be to
 connect these results to a data base, through the use of SQL, allowing
 the quick access of data produced by this model.
 
-\pagebreak
+\newpage
+
 \begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
 
-    \hypertarget{references}{%
-\section*{\texorpdfstring{\emph{References}}{References}}\label{references}}
+\hypertarget{references}{%
+\section*{{Bibliography}}\label{references}}
 
-
-Bogan, 2020. Retrieved 24 February, 2020, from
-http://www.bogan.ca/orbits/kepler/e\_anomly.html
-
-Christiansen, J.L., Ballard, S., Charbonneau, D., Deming, D., Holman,
-M.J., Madhusudhan, N., Seager, S., Wellnitz, D.D., Barry, R.K.,
-Livengood, T.A. and Hewagama, T., 2010. System parameters, transit
+Christiansen, J.L. et al., 2010. \textit{System parameters, transit
 times, and secondary eclipse constraints of the exoplanet systems
 HAT-P-4, TrES-2, TrES-3, and WASP-3 from the NASA EPOXI mission of
-opportunity. The Astrophysical Journal, 726(2), p.94.
+opportunity.} The Astrophysical Journal, 726(2), p.94.
 
-Fischer, D.A., Vogt, S.S., Marcy, G.W., Butler, R.P., Sato, B.E., Henry,
-G.W., Robinson, S., Laughlin, G., Ida, S., Toyota, E. and Omiya, M.,
-2007. Five intermediate-period planets from the N2K sample. The
-Astrophysical Journal, 669(2), p.1336. Lovis, C. and Fischer, D.A.,
-2011. Radial Velocity. Radial Velocity Techniques for Exoplanets;
-Seager, S., Ed.; University of Arizona Press: Tucson, AZ, USA.
+Fischer, D.A. et al., 2011. \textit{Radial Velocity Techniques for Exoplanets}; University of Arizona Press: Tucson, AZ, USA.
 
-Lovis, C. and Fischer, D., 2010. Radial velocity techniques for
-exoplanets. Exoplanets, pp.27-53.
+Lovis, C. and Fischer, D., 2010. \textit{Radial velocity techniques for
+exoplanets.} Exoplanets, pp.27-53.
 
-Nutzman, P., Gilliland, R.L., McCullough, P.R., Charbonneau, D.,
-Christensen-Dalsgaard, J., Kjeldsen, H., Nelan, E.P., Brown, T.M. and
-Holman, M.J., 2010. Precise estimates of the physical parameters for the
-exoplanet system HD 17156 enabled by Hubble Space Telescope fine
-guidance sensor transit and asteroseismic observations. The
-Astrophysical Journal, 726(1), p.3.
+Nutzman, P. et al., 2010. \textit{Precise estimates of the physical parameters for the exoplanet system HD 17156 enabled by Hubble Space Telescope fine guidance sensor transit and asteroseismic observations.} The Astrophysical Journal, 726(1), p.3.
 
-Perryman, M., 2018. The exoplanet handbook. Cambridge University Press.
-Retrieved 10 Feb, 2020, from
+Perryman, M., 2018. \textit{The exoplanet handbook.} Cambridge University Press. Retrieved 10 Feb, 2020, from
 http://exoplanet.eu/media/flatpages\_documents/20180101-macp-detection-methods-color.pdf
 
-Reed, B.C., 2019. Keplerian Ellipses: The Physics of the Gravitational
-Two-body Problem. Morgan \& Claypool Publishers. p.6-1
+Reed, B.C., 2019. \textit{Keplerian Ellipses: The Physics of the Gravitational Two-body Problem.} Morgan \& Claypool Publishers. p.6-1
 
-Schneider, J. ``Interactive Extra-solar Planets Catalog''. The
+Schneider, J. \textit{Interactive Extra-solar Planets Catalog.} The
 Extrasolar Planets Encyclopedia. Retrieved 5 February 2020.
 
-Sozzetti, A., Torres, G., Charbonneau, D., Winn, J.N., Korzennik, S.G.,
-Holman, M.J., Latham, D.W., Laird, J.B., Fernandez, J., O'Donovan, F.T.
-and Mandushev, G., 2009. A new spectroscopic and photometric analysis of
-the transiting planet systems TrES-3 and TrES-4. The Astrophysical
-Journal, 691(2), p.1145.
+Sozzetti, A. et al., 2009. \textit{A new spectroscopic and photometric analysis of the transiting planet systems TrES-3 and TrES-4.} The Astrophysical Journal, 691(2), p.1145.
 
-The Economist, 2020. Wikipedia, 2020. Retrieved 27 January, 2020, from
+Economist, 2016. Retrieved 27 January, 2020, from
 https://www.economist.com/graphic-detail/2016/08/25/how-to-find-exoplanets
 
-Wikipedia, 2020a. Retrieved 28 February, 2020, from
-https://upload.wikimedia.org/wikipedia/commons/1/1d/Angular\_Parameters\_of\_Elliptical\_Orbit.png
+Wikipedia, 2020a. Retrieved 28 February, 2020, from https://upload.wikimedia.org/wikipedia/\\
+commons/1/1d/Angular\_Parameters\_of\_Elliptical\_Orbit.png
 
-Wikipedia, 2020b. Retrieved 1 January, 2020, from
-https://commons.wikimedia.org/w/index.php?curid=44300489
+Wikipedia, 2020b. Retrieved 1 January, 2020, from \\ https://commons.wikimedia.org/w/index.php?curid=44300489
 
-Wikipedia, 2020c. Retrieved 1 January, 2020, from
-https://upload.wikimedia.org/wikipedia/commons/7/72/Eccentric\_and\_True\_Anomaly.svg
+Wikipedia, 2020c. Retrieved 1 January, 2020, from \\ https://upload.wikimedia.org/wikipedia/commons/7/72/Eccentric\_and\_True\_Anomaly.svg
 
-Winn, J.N., 2010. Transits and occultations. arXiv preprint
+Winn, J.N., 2010. \textit{Transits and occultations.} arXiv preprint
 arXiv:1001.2010.
 
-Wolszczan, A. and Frail, D.A., 1992. A planetary system around the
-millisecond pulsar PSR1257+ 12. Nature, 355(6356), pp.145-147.
+Wolszczan, A. and Frail, D.A., 1992. \textit{A planetary system around the millisecond pulsar PSR1257+ 12.} Nature, 355(6356), pp.145-147.
 
-
-    % Add a bibliography block to the postdoc
-        
     
 \end{document}
