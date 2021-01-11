@@ -8,6 +8,7 @@ The 2019 Nobel Prize in Physics was awarded in part to the two astronomers (Mayo
 
 This repository contains the fully documented Jupyter Notebook, with code and markup, handed in for the 2019-2020 Eton College Computational Physics Prize. PNG files are included for diagrams within the Notebook and can be found in the images folder.
 
-A latex folder contains a formatted raw latex version with an output pdf file- images have not been added yet. This is the same as found in the root folder. 
+A latex folder contains a formatted raw latex version with an output pdf file- images have been added. Note that images both in the Jupyter Notebook and Latex file rely on the relative file path to the "images" and "matplotlib_graph." 
+The output pdf is currently the same as found in the root folder. Minor cosmetic changes will soon be made. 
 
 Various problems have been identified within the code and ongoing development is currently working towards v0.2.
