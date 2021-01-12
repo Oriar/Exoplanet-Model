@@ -13,3 +13,5 @@ A latex folder contains a formatted raw latex version with an output pdf file- i
 The output pdf is currently the same as found in the root folder. Minor cosmetic changes to the bookmarks have been made. 
 
 Ongoing development is currently working towards v0.2. This will contain an interactive Python file with web-scraping capabilities. 
+
+Author's Note: All work in this project is original, unless otherwise specified. Any statements or opinions given in this paper are not necessarily endorsed or authorised by Eton College or its subsidiary companies. 
